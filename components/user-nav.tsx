@@ -32,9 +32,9 @@ function UserNav({ user, className }: UserNavProps) {
       <span className="text-sm">
         Hey, <span className="font-medium">{displayName}</span>
       </span>
-      <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5">
-        <HugeiconsIcon icon={Logout01Icon} className="size-4" />
+      <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
         Sign out
+        <HugeiconsIcon icon={Logout01Icon} className="size-3" />
       </Button>
     </div>
   )
