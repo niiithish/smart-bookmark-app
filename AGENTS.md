@@ -11,6 +11,10 @@
 - `bun run lint` - Run ESLint
 - **No test framework configured** - This project does not have test setup
 
+### Database
+- `bun drizzle-kit generate` - Generate migration from schema changes
+- `bun drizzle-kit migrate` - Apply pending migrations to database
+
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript (strict mode enabled)

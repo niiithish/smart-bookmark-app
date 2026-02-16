@@ -24,7 +24,9 @@ function BookmarkManager({ userId, className }: BookmarkManagerProps) {
 
   React.useEffect(() => {
     fetchBookmarks()
+  }, [])
 
+  React.useEffect(() => {
     const subscription = supabase
       .channel("bookmarks")
       .on(
@@ -37,7 +39,11 @@ function BookmarkManager({ userId, className }: BookmarkManagerProps) {
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
-            setBookmarks((prev) => [payload.new as Bookmark, ...prev])
+            setBookmarks((prev) => {
+              const exists = prev.find((b) => b.id === payload.new.id)
+              if (exists) return prev
+              return [payload.new as Bookmark, ...prev]
+            })
           } else if (payload.eventType === "DELETE") {
             setBookmarks((prev) =>
               prev.filter((b) => b.id !== payload.old.id)
@@ -59,10 +65,16 @@ function BookmarkManager({ userId, className }: BookmarkManagerProps) {
   }, [userId, supabase])
 
   async function fetchBookmarks() {
-    const response = await fetch("/api/bookmarks")
-    if (response.ok) {
-      const data = await response.json()
-      setBookmarks(data)
+    try {
+      const response = await fetch("/api/bookmarks")
+      if (response.ok) {
+        const data = await response.json()
+        setBookmarks(data)
+      } else {
+        console.error("Failed to fetch bookmarks:", await response.text())
+      }
+    } catch (error) {
+      console.error("Error fetching bookmarks:", error)
     }
   }
 
@@ -79,6 +91,8 @@ function BookmarkManager({ userId, className }: BookmarkManagerProps) {
       })
 
       if (response.ok) {
+        const newBookmark = await response.json()
+        setBookmarks((prev) => [newBookmark, ...prev])
         setTitle("")
         setUrl("")
       }
