@@ -6,6 +6,8 @@ import {
   Example,
   ExampleWrapper,
 } from "@/components/example"
+import { signOut, useSession } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,8 +71,32 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon, BluetoothIcon, MoreVerticalCircle01Icon, FileIcon, FolderIcon, FolderOpenIcon, CodeIcon, MoreHorizontalCircle01Icon, SearchIcon, FloppyDiskIcon, DownloadIcon, EyeIcon, LayoutIcon, PaintBoardIcon, SunIcon, MoonIcon, ComputerIcon, UserIcon, CreditCardIcon, SettingsIcon, KeyboardIcon, LanguageCircleIcon, NotificationIcon, MailIcon, ShieldIcon, HelpCircleIcon, File01Icon, LogoutIcon } from "@hugeicons/core-free-icons"
 
 export function ComponentExample() {
+  const { data: session } = useSession()
+  const router = useRouter()
+
+  if (!session) return null
+
   return (
     <ExampleWrapper>
+      <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
+        <div className="flex items-center gap-2">
+          {session.user.image && (
+            <img src={session.user.image} alt={session.user.name} className="size-6 rounded-full" />
+          )}
+          <span className="text-xs font-medium">{session.user.name}</span>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={async () => {
+            await signOut()
+            router.push("/login")
+          }}
+        >
+          <HugeiconsIcon icon={LogoutIcon} strokeWidth={2} />
+          Sign Out
+        </Button>
+      </div>
       <CardExample />
       <FormExample />
     </ExampleWrapper>
