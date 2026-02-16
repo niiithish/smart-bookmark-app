@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Logout01Icon } from "@hugeicons/core-free-icons"
 import { createClient } from "@/lib/supabase/client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,10 +26,9 @@ interface UserNavProps {
       avatar_url?: string | null
     }
   }
-  className?: string
 }
 
-export function UserNav({ user, className }: UserNavProps) {
+export function UserNav({ user }: UserNavProps) {
   const supabase = React.useMemo(() => createClient(), [])
   const name = user.user_metadata?.name
   const email = user.email

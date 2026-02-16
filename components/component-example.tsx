@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 
 import {
   Example,
@@ -85,7 +86,7 @@ export function ComponentExample() {
       }
     }
     getUser()
-  }, [])
+  }, [supabase])
 
   if (!session) return null
 
@@ -94,7 +95,7 @@ export function ComponentExample() {
       <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-2">
           {session.user.user_metadata.avatar_url && (
-            <img src={session.user.user_metadata.avatar_url} alt={session.user.user_metadata.full_name} className="size-6 rounded-full" />
+            <Image src={session.user.user_metadata.avatar_url} alt={session.user.user_metadata.full_name} width={24} height={24} className="size-6 rounded-full" />
           )}
           <span className="text-xs font-medium">{session.user.user_metadata.full_name}</span>
         </div>
@@ -121,10 +122,12 @@ function CardExample() {
     <Example title="Card" className="items-center justify-center">
       <Card className="relative w-full max-w-sm overflow-hidden pt-0">
         <div className="bg-primary absolute inset-0 z-30 aspect-video opacity-50 mix-blend-color" />
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1604076850742-4c7221f3101b?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Photo by mymind on Unsplash"
           title="Photo by mymind on Unsplash"
+          width={1887}
+          height={1060}
           className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale"
         />
         <CardHeader>
