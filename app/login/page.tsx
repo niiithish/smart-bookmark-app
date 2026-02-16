@@ -13,7 +13,7 @@ export default function LoginPage() {
         try {
             await signIn.social({
                 provider: "google",
-                callbackURL: "/",
+                callbackURL: "/dashboard",
             })
         } catch (error) {
             console.error("Login failed:", error)
