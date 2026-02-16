@@ -40,9 +40,10 @@ function BookmarkManager({ userId, className }: BookmarkManagerProps) {
   }, [fetchBookmarks])
 
   React.useEffect(() => {
-    const subscription = supabase
+    const subscription = (supabase
       .channel("bookmarks")
-      .on(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .on as any)(
         "postgres_changes",
         {
           event: "*",
