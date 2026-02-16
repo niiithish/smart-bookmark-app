@@ -6,8 +6,10 @@ import {
   Example,
   ExampleWrapper,
 } from "@/components/example"
-import { signOut, useSession } from "@/lib/auth-client"
+import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { User } from "@supabase/supabase-js"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -71,8 +73,19 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon, BluetoothIcon, MoreVerticalCircle01Icon, FileIcon, FolderIcon, FolderOpenIcon, CodeIcon, MoreHorizontalCircle01Icon, SearchIcon, FloppyDiskIcon, DownloadIcon, EyeIcon, LayoutIcon, PaintBoardIcon, SunIcon, MoonIcon, ComputerIcon, UserIcon, CreditCardIcon, SettingsIcon, KeyboardIcon, LanguageCircleIcon, NotificationIcon, MailIcon, ShieldIcon, HelpCircleIcon, File01Icon, LogoutIcon } from "@hugeicons/core-free-icons"
 
 export function ComponentExample() {
-  const { data: session } = useSession()
+  const [session, setSession] = useState<{ user: User } | null>(null)
   const router = useRouter()
+  const supabase = createClient()
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        setSession({ user })
+      }
+    }
+    getUser()
+  }, [])
 
   if (!session) return null
 
@@ -80,16 +93,16 @@ export function ComponentExample() {
     <ExampleWrapper>
       <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-2">
-          {session.user.image && (
-            <img src={session.user.image} alt={session.user.name} className="size-6 rounded-full" />
+          {session.user.user_metadata.avatar_url && (
+            <img src={session.user.user_metadata.avatar_url} alt={session.user.user_metadata.full_name} className="size-6 rounded-full" />
           )}
-          <span className="text-xs font-medium">{session.user.name}</span>
+          <span className="text-xs font-medium">{session.user.user_metadata.full_name}</span>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={async () => {
-            await signOut()
+            await supabase.auth.signOut()
             router.push("/login")
           }}
         >

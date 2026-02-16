@@ -1,58 +1,22 @@
 
-// import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-// export const user = pgTable("user", {
-//     id: text("id").primaryKey(),
-//     name: text("name").notNull(),
-//     email: text("email").notNull().unique(),
-//     emailVerified: boolean("email_verified").notNull(),
-//     image: text("image"),
-//     createdAt: timestamp("created_at").notNull(),
-//     updatedAt: timestamp("updated_at").notNull(),
-// });
+// This table mimics the Supabase auth.users table in the public schema
+// allowing you to add application-specific user data.
+// In a real Supabase setup, you might use a trigger to auto-create this.
+export const profiles = pgTable("profiles", {
+    id: uuid("id").primaryKey(), // This should match auth.users(id)
+    name: text("name"),
+    email: text("email"),
+    avatarUrl: text("avatar_url"),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
 
-// export const session = pgTable("session", {
-//     id: text("id").primaryKey(),
-//     expiresAt: timestamp("expires_at").notNull(),
-//     token: text("token").notNull().unique(),
-//     createdAt: timestamp("created_at").notNull(),
-//     updatedAt: timestamp("updated_at").notNull(),
-//     ipAddress: text("ip_address"),
-//     userAgent: text("user_agent"),
-//     userId: text("user_id")
-//         .notNull()
-//         .references(() => user.id, { onDelete: "cascade" }),
-// });
-
-// export const account = pgTable("account", {
-//     id: text("id").primaryKey(),
-//     accountId: text("account_id").notNull(),
-//     providerId: text("provider_id").notNull(),
-//     userId: text("user_id")
-//         .notNull()
-//         .references(() => user.id, { onDelete: "cascade" }),
-//     accessToken: text("access_token"),
-//     refreshToken: text("refresh_token"),
-//     idToken: text("id_token"),
-//     accessTokenExpiresAt: timestamp("access_token_expires_at"),
-//     refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-//     scope: text("scope"),
-//     password: text("password"),
-//     createdAt: timestamp("created_at").notNull(),
-//     updatedAt: timestamp("updated_at").notNull(),
-// });
-
-// export const verification = pgTable("verification", {
-//     id: text("id").primaryKey(),
-//     identifier: text("identifier").notNull(),
-//     value: text("value").notNull(),
-//     expiresAt: timestamp("expires_at").notNull(),
-//     createdAt: timestamp("created_at"),
-//     updatedAt: timestamp("updated_at"),
-// });
-
-// Supabase handles auth tables automatically in the `auth` schema.
-// If you need custom user data, consider creating a `profiles` table linked to `auth.users`.
-
-// This export ensures this file is treated as a module.
-export const _schema_placeholder = {};
+export const bookmarks = pgTable("bookmarks", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").notNull(),
+    title: text("title").notNull(),
+    url: text("url").notNull(),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
