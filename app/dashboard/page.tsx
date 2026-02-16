@@ -1,14 +1,14 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ComponentExample } from "@/components/component-example";
 
 export default async function DashboardPage() {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (!user) {
         redirect("/login");
     }
 

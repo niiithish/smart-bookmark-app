@@ -1,26 +1,32 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { signIn } from "@/lib/auth-client"
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
-    const [isLoading, setIsLoading] = React.useState(false)
+    const [isLoading, setIsLoading] = React.useState(false);
 
     const handleGoogleLogin = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
+        const supabase = createClient();
         try {
-            await signIn.social({
+            const { error } = await supabase.auth.signInWithOAuth({
                 provider: "google",
-                callbackURL: "/dashboard",
-            })
+                options: {
+                    redirectTo: `${window.location.origin}/api/auth/callback`,
+                },
+            });
+            if (error) {
+                console.error("Login failed:", error);
+            }
         } catch (error) {
-            console.error("Login failed:", error)
+            console.error("Login failed:", error);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
